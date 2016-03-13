@@ -16,13 +16,17 @@
 * 주 6 ds
 * 주 7
 * 주 8 midterm
-* 주 9  event
+* 주 9 event
 * 주 10 algo
 * 주 11 file
 * 주 12 
 * 주 13 oo
 * 주 14
 * 주 15 final
+
+## 과제
+
+* 거북이 게임
 
 ## 참고문헌
 
