@@ -1,6 +1,6 @@
 # functions for p
 
-# start of 1_hello_programming
+# >>> start of 1_hello_programming
 
 import turtle
 wn=turtle.Screen()
@@ -43,5 +43,40 @@ def giyukAt(size,at):
     t1.write(t1.pos())
     giyuk(size)
 
-# end of 1_hello_programming
+# <<< end of 1_2_3_2_3_hello_programming
+# >>> start of 4_controlstructure
+
+def drawSquare(size):
+    for i in range(0,4):
+        t1.forward(size)
+        t1.right(90)
+
+def drawTriangle(size):
+    for i in range(0,3):
+        t1.forward(size)
+        t1.right(120)
+
+def drawSquareAt(size, pos):
+    t1.penup()
+    t1.setpos(pos)
+    t1.pendown()
+    for i in range(0,4):
+        t1.forward(size)
+        t1.right(90)
+
+def drawStarFill(size, color):
+    angle = 144
+    t1.fillcolor(color)
+    t1.begin_fill()
+    for side in range(5):
+        t1.forward(size)
+        t1.right(angle)
+    t1.end_fill()
+
+def drawPolygon(size,tilt,sides):
+    t1.right(tilt)
+    for i in range(0,sides):
+        t1.forward(size)
+        t1.right(360/sides)
+
 
