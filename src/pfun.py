@@ -1,10 +1,30 @@
+# author jsl
+# last updated 20150324
 # functions for p
 
-# >>> start of 1_hello_programming
+## how to import
+## goto p2/src and run ipython
+# import pfun
+# pfun.main()
+## if changes in pfun.py
+# pfun.reload()
 
+# >>> start of 1_hello_programming
+# glbals
 import turtle
 wn=turtle.Screen()
 t1=turtle.Turtle()
+
+# input: none
+# output: none
+# usage: sfun.reload()
+def reload():
+    import imp
+    import sys
+    if 'pfun' in sys.modules:
+        imp.reload(sys.modules['pfun'])
+    else:
+        import pfun
 
 def giyuk(size):
     t1.fd(size)
@@ -22,13 +42,13 @@ def mieum(size):
     nieun(size)
 
 def mieumPos(size):
-    # 위치와 방향의 저장
+    # save old position and heading
     oldpos=t1.pos()
     oldhead=t1.heading()
     giyuk(size)
-    # 이동 궤적 지우기
+    # move without drawing
     t1.penup()
-    # 저장한 위치와 방향을 사용하기
+    # restore old settings
     t1.setpos(oldpos)
     t1.setheading(oldhead)
     t1.pendown()
@@ -46,37 +66,10 @@ def giyukAt(size,at):
 # <<< end of 1_2_3_2_3_hello_programming
 # >>> start of 4_controlstructure
 
-def drawSquare(size):
-    for i in range(0,4):
-        t1.forward(size)
-        t1.right(90)
 
-def drawTriangle(size):
-    for i in range(0,3):
-        t1.forward(size)
-        t1.right(120)
-
-def drawSquareAt(size, pos):
-    t1.penup()
-    t1.setpos(pos)
-    t1.pendown()
-    for i in range(0,4):
-        t1.forward(size)
-        t1.right(90)
-
-def drawStarFill(size, color):
-    angle = 144
-    t1.fillcolor(color)
-    t1.begin_fill()
-    for side in range(5):
-        t1.forward(size)
-        t1.right(angle)
-    t1.end_fill()
-
-def drawPolygon(size,tilt,sides):
-    t1.right(tilt)
-    for i in range(0,sides):
-        t1.forward(size)
-        t1.right(360/sides)
+def lab1():
+    giyuk(100)
 
 
+def main():
+    lab1()
