@@ -1,3 +1,5 @@
+[![Gitter](https://badges.gitter.im/smu405/p.svg)](https://gitter.im/smu405/p?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 # 공지
 
 * 20160324 과제는 학교서버 설정이 늦어져 git에 제출함.
@@ -12,23 +14,23 @@
 * 프로그래밍 입문
 
 ## 주별 내용
-* 주 1 env
+* 주 1 3-02수 3-07월 env
     * install
     * hello
     * 프로그래밍이란
-* 주 2 turtle
-* 주 3 
-* 주 4 cs
-* 주 5
-* 주 6 ds
-* 주 7
+* 주 2 3-09수 3-14월 logo programming
+* 주 3 3-16수 3-21월 var, function and reuse
+* 주 4 3-23수 3-28월 cs
+* 주 5 3-30수 4-04월 cs
+* 주 6 4-06수 4-11월 ds
+* 주 7 4-13수 4-18월 event 
 * 주 8 midterm
-* 주 9 event
+* 주 9 algo
 * 주 10 algo
 * 주 11 file
-* 주 12 
+* 주 12 regex
 * 주 13 oo
-* 주 14
+* 주 14 oo
 * 주 15 final
 
 ## 과제
