@@ -1,30 +1,42 @@
-#
-# author jsl
-# last updated 20150325FRI
-#
-# functions for p
-#
-# status: 
-# 1) reload() problem??
-# 2) gamePlay() seems ok except the 2nd rectangle??
-# press 'q' to exit gamePlay()
+"""
+author jsl
+last updated 20150325FRI
 
-## how to import
-## in the directory where *.ipynb is saved
-# import src.pfun as p
-# p.main()
-## if changes in pfun.py
-# p.reload()
+collection of function for the lecture
 
+"""
 # >>> start of 1_hello_programming
-# glbals
-import turtle
-if 'wn' in dir():
-    del wn
-if 't1' in dir():
-    del t1
-wn=turtle.Screen()
-t1=turtle.Turtle()
+# globals
+global myhome
+global mywd
+global plantdir
+global wn
+global t1
+global myCoords
+
+def setup():
+    global t1
+    global wn
+    global myhome
+    global mywd
+    global plantdir
+    global myCoords
+
+    import sys
+    import os
+    import turtle
+    myhome=os.path.expanduser('~')
+    mywd=os.getcwd() # runs from the dir where ipynb is
+    plantdir=os.path.join(mywd,'lib/')
+    sys.path.append(os.path.join(mywd,'src'))
+
+    myCoords=[ [(100, 100), (200, 200)],[(50, 50), (150, -50)]]
+    if 'wn' in dir():
+        del wn
+    if 't1' in dir():
+        del t1
+    wn=turtle.Screen()
+    t1=turtle.Turtle()
 
 # input: none
 # output: none
@@ -32,10 +44,10 @@ t1=turtle.Turtle()
 def reload():
     import imp
     import sys
-    if 'src.pfun' in sys.modules:
-        imp.reload(sys.modules['src.pfun'])
+    if 'pfun' in sys.modules:
+        imp.reload(sys.modules['pfun'])
     else:
-        import src.pfun as p
+        import pfun
 
 def giyuk(size):
     t1.fd(size)
@@ -75,7 +87,7 @@ def giyukAt(size,at):
     giyuk(size)
 
 # <<< end of 1_2_3_2_3_hello_programming
-# >>> start of 4_controlstructure
+# >>> start of 4_5_controlstructure
 
 def drawSquare(size):
     for i in range(0,4):
@@ -94,6 +106,11 @@ def drawSquareAt(size, pos):
     for i in range(0,4):
         t1.forward(size)
         t1.right(90)
+
+def drawStar(size):
+    for i in range(5):
+        t1.forward(size)
+        t1.right(144)
 
 def drawStarFill(size, color):
     angle = 144
@@ -117,124 +134,98 @@ def drawSquareOrTriangle(size,sides,angle):
         t1.forward(size)
         t1.right(angle)
 
-def makeSwirlSquare(size,bigger,turns,sides,angle):
-    nBigger=sides-2
+def makeSwirlSquare(size,bigger,turns,angle):
+    nBigger=2
     for i in range(0,turns):
-        # if not divide
-        if(i%nBigger and nBigger >=2):
+        #if divided by nBigger, make it bigger
+        if not i%nBigger:
             size+=bigger
         t1.forward(size)
         t1.right(angle)
 
-def makeSwirlSquareAt(size,bigger,turns,sides,angle,pos):
+def makeSwirlSquareAt(size,bigger,turns,angle,pos):
     t1.penup()
     t1.goto(pos)
     t1.pendown()
-    makeSwirlSquare(size,bigger,turns,sides,angle)
+    makeSwirlSquare(size,bigger,turns,angle)
 
-def testSwirl():
-    # square
-    size=10
-    bigger=10
-    turns=10
-    sides=4
-    angle=90
-    makeSwirlSquare(size,bigger,turns,sides,angle)
-    makeSwirlSquareAt(size,bigger,turns,sides,angle,(100,100))
+def convertTemperature(sel,temperature):
+    res=0.0
+    if sel=='F':
+        res=(temperature-32)*5/9.0
+    elif sel=='C':
+        res=temperature*9.0/5.0+32
+    else:
+        print "Error: Enter either F or C!"
+    print "{0:d}{1:s} --> {2:.2f}".format(temperature,sel,res)
+    return res
 
-#--->> tmp
-myCoords=[ [(100, 100), (200, 200)],[(50, 50), (150, -50)]]
-# determine if a point is inside a triangle
-# input:
-# 1) point: tuple (or list) (x,y)
-# 2) coord: list of tuples [(x1,y1),(x2,y2)]
-# output: True or False
-# usage:
-# point=(0, 0)
-# coord=[(100, 100), (200, 200)]
-# isInRectangle(point,coord)
-def isInRectangle(point,coord):
-    x1=coord[0][0]
-    x2=coord[1][0]
-    y1=coord[0][1]
-    y2=coord[1][1]
-    x=point[0]
-    y=point[1]
-    return (x1 <= x <= x2 and y1 <= y <= y2)
+def computeGrade(marks):
+    if marks>=90 and marks<=100:
+        grade='A'
+    elif marks>=80 and marks<90:
+        grade='B'
+    elif marks>=70 and marks<80:
+        grade='C'
+    elif marks>=60 and marks<70:
+        grade='D'
+    else:
+        grade='F'
+    print "You enterd marks {0:.1f} --> grade {1:2s}".format(marks,grade)
+    return grade
 
-# determine if a point is inside any triangle
-# input:
-# 1) point: tuple (or list) (x,y)
-# 2) coords: list of list of tuples [(x1,y1),(x2,y2)]
-# output: True or False
-# usage:
-# point=(0, 0)
-# coords=[ [(100, 100), (200, 200)],[(50, 50), (150, -50)]]
-# isInRectangles(point,coords)
-def isInRectangles(point,coords=myCoords):
-    isIn=False
-    for coord in coords:
-        # return true if in any one of rectangle
-        if(isInRectangle(point,coord)):
-            isIn=True
-            return isIn
-    return isIn
+def rspPlay(u1, u2):
+    if u1 == u2:
+        res="draw"
+    elif u1 == 'scissor':
+        if u2 == 'rock':
+            res="rock won."
+        else:
+            res="scissor won."
+    elif u1 == 'rock':
+        if u2 == 'paper':
+            res="paper won."
+        else:
+            res="rock won."
+    elif u1 == 'paper':
+        if u2 == 'rock':
+            res="paper won."
+        else:
+            res="scissor won."
+    else:
+        res="Error: select one of scissor, rock or paper!"
+    return res
 
-def drawSquareWithCoords(coords=myCoords):
-    for coord in coords:
-        x1=coord[0][0]
-        x2=coord[1][0]
-        y1=coord[0][1]
-        y2=coord[1][1]
-        t1.penup()
-        t1.setpos((x1,y1))
-        t1.pendown()
-        t1.setpos((x2,y1))
-        t1.setpos((x2,y2))
-        t1.setpos((x1,y2))
-        t1.setpos((x1,y1))
-
-def t1up():
-    pt=t1.pos()
-    print "up",pt
-    if(isInRectangles(pt)):
-        t1.write(pt)
-    t1.forward(45)
-
-def t1left():
-    t1.left(45)
-
-def t1right():
-    t1.right(45)
-
-def t1down():
-    pt=t1.pos()
-    print "down",pt
-    if(isInRectangles(pt)):
-        t1.write(pt)
-    t1.back(45)
-
-def bindKeys():
-    wn.onkey(t1up, "Up")
-    wn.onkey(t1left, "Left")
-    wn.onkey(t1right, "Right")
-    wn.onkey(t1down, "Down")
-    wn.onkey(wn.bye, "q") # Register function exit to event key_press "q"
-
-def gamePlay():
-    drawSquareWithCoords()
-    bindKeys()
-    # listen to any input
-    wn.listen()
-    # do loop until exit
-    # turtle's mainloop
-    turtle.mainloop()
-
-#<<--- tmp
+def rspPlayV1(u1, u2):
+    if u1 == u2:
+        res="draw"
+    elif u1 == 'scissor' and u2 == 'rock':
+        res="rock won."
+    elif u1 == 'scissor' and u2 == 'paper':
+        res="scissor won."
+    elif u1 == 'rock' and  u2 == 'paper':
+        res="paper won."
+    elif u1 == 'rock' and  u2 == 'scissor':
+        res="rock won."
+    elif u1 == 'paper' and u2 == 'rock':
+        res="paper won."
+    elif u1 == 'paper' and u2 == 'scissor':
+        res="scissor won."
+    else:
+        res="Error: select one of scissor, rock or paper!"
+    return res
 
 def lab1():
-    testSwirl()
+    print "hello"
 
 def main():
+    setup()
     lab1()
+
+if __name__=="__main__":
+    main()
+
+#@
+
+
 
