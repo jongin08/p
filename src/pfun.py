@@ -3,7 +3,6 @@ author jsl
 last updated 20150325FRI
 
 collection of function for the lecture
-
 """
 # >>> start of 1_hello_programming
 # globals
@@ -215,17 +214,60 @@ def rspPlayV1(u1, u2):
         res="Error: select one of scissor, rock or paper!"
     return res
 
-def lab1():
-    print "hello"
+def drawTriangleWithChar(nTimes,symbol):
+    maxTimes=nTimes
+    for i in range(1,maxTimes+1):
+        print((maxTimes-i)*" "+2*i*symbol)
+
+def computeBMI(height,weight):
+    bmi = float(weight / height / height)
+    print 'Your BMI is %.2f' % bmi
+    if bmi <= 18.5:
+        res = 'Underweight'
+    elif bmi >= 18.5 and bmi < 23:
+        res = 'Normal weight'
+    elif bmi >= 23 and bmi < 25:
+        res = 'Risk of overweight'
+    elif bmi >= 25 and bmi < 30:
+        res = "Obese Stage 1"
+    elif bmi >= 30 and bmi < 40:
+        res = "Obese Stage 2"
+    elif bmi >= 40:
+        res = "Obese Stage 3"
+    else:
+        res = "Error"
+    return res
+
+def pEuler1():
+    sum=0
+    for num in range(0,1000,3):
+        if not (num % 3 and num % 5): sum+=num
+    return sum
+
+def pEuler_19():
+    D=[31,28,31,
+       30,31,30,
+       31,31,30,
+       31,30,31]
+    d,n=0,0
+    for i in range(0,10):
+        if (not (1900+i)%4 and (1900+i)%100) or not (1900+i)%400:
+            D[1]=29
+        else:
+            D[1]=28
+        for t in D:
+            if not (d-1)%7 and i>=1:
+                n+=1
+            d+=t
+            #print n, t, d,not(d-1)%7
+    return n
 
 def main():
     setup()
-    lab1()
 
 if __name__=="__main__":
     main()
 
-#@
 
 
 
