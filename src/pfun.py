@@ -3,6 +3,51 @@ author jsl
 last updated 20150325FRI
 
 collection of function for the lecture
+
+status
+-----
+    1) reload() fixed
+    2) gamePlay() seems ok except the 2nd rectangle??
+        press 'q' to exit gamePlay()
+
+how to import
+-----
+    * go to the directory where *.ipynb is saved
+    * run ipython or ipython notebook
+        ```
+        %cd src
+        import pfun
+        pfun.setup()
+        pfun.lab1()
+        ```
+    * if changes in pfun.py, in ipython notebook
+        ```
+        %%writefile pfun.py -a
+        ```
+    * when vim editing pfun.py, changes in pfun.py -> :edit
+    * reloading (e.g. add lab5() in the module (pfun.py))
+        ```
+        pfun.reload()
+        pfun.lab5()
+        ```
+    * docstring
+        ```
+        import pfun
+        dir(pfun)
+        help(pfun)
+        help(pfun.setup)
+        ```
+
+useful ipython commands
+-----
+    * %load 65-67 -> run history 65-67
+    * %load -r 1-10 pfun.py -> run lines 1-10 from pfun.py
+    * %history -n 1-10 src/todel.py -> NOTE it is not appending
+    * %save -a pfun.py 76-80 -> append history 76-80 to pfun.py
+    * %%writefile pfun.py -a -> append current cell to pfun.py
+    * %bookmark root -> get_ipython().magic(u'bookmark root')
+    * %cd {"/home/jsl"} -> get_ipython().magic(u'cd {"/home/jsl/"}')
+    * %cd -b root -> get_ipython().magic(u'cd -b root')
 """
 # >>> start of 1_hello_programming
 # globals
@@ -262,12 +307,159 @@ def pEuler_19():
             #print n, t, d,not(d-1)%7
     return n
 
+# <<< end of 4_5_controlstructure
+# >>> start of 
+
+#@here
+
+#--->> tmp
+# determine if a point is inside a triangle
+# input:
+# 1) point: tuple (or list) (x,y)
+# 2) coord: list of tuples [(x1,y1),(x2,y2)]
+# output: True or False
+# usage:
+# point=(0, 0)
+# coord=[(100, 100), (200, 200)]
+# isInRectangle(point,coord)
+def isInRectangle(point,coord):
+    x1=coord[0][0]
+    x2=coord[1][0]
+    y1=coord[0][1]
+    y2=coord[1][1]
+    x=point[0]
+    y=point[1]
+    return (x1 <= x <= x2 and y1 <= y <= y2)
+
+# determine if a point is inside any triangle
+# input:
+# 1) point: tuple (or list) (x,y)
+# 2) coords: list of list of tuples [(x1,y1),(x2,y2)]
+# output: True or False
+# usage:
+# point=(0, 0)
+# coords=[ [(100, 100), (200, 200)],[(50, 50), (150, -50)]]
+# isInRectangles(point,coords)
+# 160402 deleted myCoords def isInRectangles(point,coords=myCoords):
+def isInRectangles(point,coords):
+    isIn=False
+    for coord in coords:
+        # return true if in any one of rectangle
+        if(isInRectangle(point,coord)):
+            isIn=True
+            return isIn
+    return isIn
+
+def drawSquareWithCoords(coords):
+    for coord in coords:
+        x1=coord[0][0]
+        x2=coord[1][0]
+        y1=coord[0][1]
+        y2=coord[1][1]
+        t1.penup()
+        t1.setpos((x1,y1))
+        t1.pendown()
+        t1.setpos((x2,y1))
+        t1.setpos((x2,y2))
+        t1.setpos((x1,y2))
+        t1.setpos((x1,y1))
+
+def t1up():
+    pt=t1.pos()
+    print "up",pt
+    if(isInRectangles(pt)):
+        t1.write(pt)
+    t1.forward(45)
+
+def t1left():
+    t1.left(45)
+
+def t1right():
+    t1.right(45)
+
+def t1down():
+    pt=t1.pos()
+    print "down",pt
+    if(isInRectangles(pt)):
+        t1.write(pt)
+    t1.back(45)
+
+def bindKeys():
+    wn.onkey(t1up, "Up")
+    wn.onkey(t1left, "Left")
+    wn.onkey(t1right, "Right")
+    wn.onkey(t1down, "Down")
+    wn.onkey(wn.bye, "q") # Register function exit to event key_press "q"
+
+def gamePlay():
+    drawSquareWithCoords(myCoords)
+    bindKeys()
+    # listen to any input
+    wn.listen()
+    # do loop until exit
+    # turtle's mainloop
+    turtle.mainloop()
+
+def lab6():
+    gamePlay()
+
+def lab5():
+    setup()
+    drawStar(100)
+    turns=20
+    size=5
+    bigger=15
+    angle=90
+    t1.home()
+    t1.clear()
+    makeSwirlSquare(size,bigger,turns,angle)
+    makeSwirlSquareAt(size,bigger,turns,angle,(100,100))
+
+def lab5a():
+    sel = raw_input('Enter F or C: ')
+    temp = raw_input('Enter temperature: ')
+    temperature = int(temp)
+    result=convertTemperature(sel,temperature)
+    print "{0:d}{1:s} --> {2:.2f}".format(temperature,sel,result)
+
+def lab5b():
+    marksTmp = raw_input('Enter marks (0~100): ')
+    marks = float(marksTmp)
+    grade=computeGrade(marks)
+    print "You enterd marks {0:.1f} --> grade {1:2s}".format(marks,grade)
+
+def lab5c():
+    sel1 = raw_input("You select scissor, rock or paper: ")
+    sel2 = raw_input("(S)he selects scissor, rock or paper: ")
+    print(rspPlay(sel1, sel2))
+    print(rspPlayV1(sel1, sel2))
+
+def lab5d():
+    drawTriangleWithChar(8,'#')
+    height=1.74
+    weight=69
+    print computeBMI(height,weight)
+    answer=pEuler1()
+    print "sum of 3,5 multiples =",answer
+    print "p euler 19 =", pEuler_19()
+
+def lab1():
+    """
+    to test list as a param to setpos()
+    """
+    t1.setpos([100,100])
+    t1.setpos([100,200])
+    t1.setpos((200,200))
+
+
 def main():
     setup()
+    lab1()
 
 if __name__=="__main__":
     main()
 
+#@
 
 
 
