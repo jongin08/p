@@ -6,9 +6,27 @@ collection of function for the lecture
 
 status
 -----
-    1) reload() fixed
-    2) gamePlay() seems ok except the 2nd rectangle??
-        press 'q' to exit gamePlay()
+    1) possible to use an anonymouse trutle e.g., turtle.fd(100)
+    2) reload() -> t1 problem
+        * turtle.getturtle() -> now seems ok
+        * ???why call setup() twice to run ok
+    3) wn.bye -> t1.bye??
+    3) gamePlay -> find treasure? -> gold in a rectangle???
+        1) scores
+            * double scores
+                * ??global state: isAlreadyIn
+            * big vs small scores
+                * ??global scores
+            * score history -> sum
+            * shapes
+                * rectangles, triangles...
+        2) file
+            * save username, time, scores
+            * save shapes to load
+                * set difficulty
+        3) status bar
+        4) menu bar
+        5) ondrag -> moveto
 
 how to import
 -----
@@ -20,11 +38,11 @@ how to import
         pfun.setup()
         pfun.lab1()
         ```
-    * if changes in pfun.py, in ipython notebook
+    * to write any changes in pfun.py
         ```
         %%writefile pfun.py -a
         ```
-    * when vim editing pfun.py, changes in pfun.py -> :edit
+    * to update vim when editing pfun.py -> :edit
     * reloading (e.g. add lab5() in the module (pfun.py))
         ```
         pfun.reload()
@@ -49,7 +67,6 @@ useful ipython commands
     * %cd {"/home/jsl"} -> get_ipython().magic(u'cd {"/home/jsl/"}')
     * %cd -b root -> get_ipython().magic(u'cd -b root')
 """
-# >>> start of 1_hello_programming
 # globals
 global myhome
 global mywd
@@ -70,17 +87,14 @@ def setup():
     import os
     import turtle
     myhome=os.path.expanduser('~')
-    mywd=os.getcwd() # runs from the dir where ipynb is
-    plantdir=os.path.join(mywd,'lib/')
-    sys.path.append(os.path.join(mywd,'src'))
-
+    mywd=os.path.dirname(os.path.realpath(__file__))
+    plantdir=os.path.join(mywd,'../lib/')
+    sys.path.append(mywd)
     myCoords=[ [(100, 100), (200, 200)],[(50, 50), (150, -50)]]
-    if 'wn' in dir():
-        del wn
-    if 't1' in dir():
-        del t1
-    wn=turtle.Screen()
-    t1=turtle.Turtle()
+    print "if t1 exists {0}...".format('t1' in vars())
+    t1=turtle.getturtle() # 
+    wn=turtle.getscreen()
+
 
 # input: none
 # output: none
@@ -93,6 +107,7 @@ def reload():
     else:
         import pfun
 
+# >>> begin 1_2_3_hello_programming
 def giyuk(size):
     t1.fd(size)
     t1.right(90)
@@ -130,8 +145,8 @@ def giyukAt(size,at):
     t1.write(t1.pos())
     giyuk(size)
 
-# <<< end of 1_2_3_2_3_hello_programming
-# >>> start of 4_5_controlstructure
+# <<< end of 1_2_3_hello_programming
+# >>> begin 4_5_controlstructure
 
 def drawSquare(size):
     for i in range(0,4):
@@ -308,11 +323,10 @@ def pEuler_19():
     return n
 
 # <<< end of 4_5_controlstructure
-# >>> start of 
+# >>> begin 
 
 #@here
 
-#--->> tmp
 # determine if a point is inside a triangle
 # input:
 # 1) point: tuple (or list) (x,y)
@@ -327,11 +341,15 @@ def isInRectangle(point,coord):
     x2=coord[1][0]
     y1=coord[0][1]
     y2=coord[1][1]
+    xs=min(x1,x2)
+    xe=max(x1,x2)
+    ys=min(y1,y2)
+    ye=max(y1,y2)
     x=point[0]
     y=point[1]
-    return (x1 <= x <= x2 and y1 <= y <= y2)
+    return (xs <= x <= xe and ys <= y <= ye)
 
-# determine if a point is inside any triangle
+# determine if a point is inside any rectangles
 # input:
 # 1) point: tuple (or list) (x,y)
 # 2) coords: list of list of tuples [(x1,y1),(x2,y2)]
@@ -340,12 +358,12 @@ def isInRectangle(point,coord):
 # point=(0, 0)
 # coords=[ [(100, 100), (200, 200)],[(50, 50), (150, -50)]]
 # isInRectangles(point,coords)
-# 160402 deleted myCoords def isInRectangles(point,coords=myCoords):
 def isInRectangles(point,coords):
     isIn=False
     for coord in coords:
         # return true if in any one of rectangle
         if(isInRectangle(point,coord)):
+            print "turtle in ",coord
             isIn=True
             return isIn
     return isIn
@@ -364,36 +382,48 @@ def drawSquareWithCoords(coords):
         t1.setpos((x1,y2))
         t1.setpos((x1,y1))
 
-def t1up():
+def keyup():
     pt=t1.pos()
     print "up",pt
-    if(isInRectangles(pt)):
+    if(isInRectangles(pt,myCoords)):
         t1.write(pt)
     t1.forward(45)
 
-def t1left():
+def keyleft():
     t1.left(45)
 
-def t1right():
+def keyright():
     t1.right(45)
 
-def t1down():
+def keydown():
     pt=t1.pos()
     print "down",pt
-    if(isInRectangles(pt)):
+    if(isInRectangles(pt,myCoords)):
         t1.write(pt)
     t1.back(45)
 
-def bindKeys():
-    wn.onkey(t1up, "Up")
-    wn.onkey(t1left, "Left")
-    wn.onkey(t1right, "Right")
-    wn.onkey(t1down, "Down")
+def addKeys():
+    wn.onkey(keyup, "Up")
+    wn.onkey(keyleft, "Left")
+    wn.onkey(keyright, "Right")
+    wn.onkey(keydown, "Down")
     wn.onkey(wn.bye, "q") # Register function exit to event key_press "q"
 
+def mousegoto(x,y):
+    msg="mouse clicked {0} {1}".format(x,y)
+    wn.title(msg)
+    t1.setpos(x,y)
+    isInRectangles((x,y),myCoords)
+    #t1.write(x, y)
+
+def addMouse():
+    wn.onclick(mousegoto)  # Wire up a click on the window.
+
 def gamePlay():
+    import turtle
     drawSquareWithCoords(myCoords)
-    bindKeys()
+    addKeys()
+    addMouse()
     # listen to any input
     wn.listen()
     # do loop until exit
@@ -451,7 +481,6 @@ def lab1():
     t1.setpos([100,200])
     t1.setpos((200,200))
 
-
 def main():
     setup()
     lab1()
@@ -460,6 +489,5 @@ if __name__=="__main__":
     main()
 
 #@
-
 
 
