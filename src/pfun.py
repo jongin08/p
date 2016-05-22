@@ -327,16 +327,112 @@ def pEuler_19():
 
 #@here
 
-# determine if a point is inside a triangle
-# input:
-# 1) point: tuple (or list) (x,y)
-# 2) coord: list of tuples [(x1,y1),(x2,y2)]
-# output: True or False
-# usage:
-# point=(0, 0)
-# coord=[(100, 100), (200, 200)]
-# isInRectangle(point,coord)
+def isOnLine(point,pos1,pos2):
+    """
+    note: horizontal, vertical, diagnal lines
+    (50,100) (150,100) -> (49,99) (151,101)
+    Parameters
+    ----------
+        arg1 x,y
+        arg2 x,y of line start pos1
+        arg3 x,y of line end pos2
+    Returns
+    -------
+        boolean
+    Examples
+    --------
+        isOnLine((70,100),(50,100),(150,100))
+        isOnLine((70,101),(50,100),(150,100))
+        isOnLine((40,101),(50,100),(150,100))
+    """
+    x1=pos1[0]-1
+    y1=pos1[1]-1
+    x2=pos2[0]+1
+    y2=pos2[1]+1
+    return isInRectangle(point,[(x1,y1),(x2,y2)])
+
+def isInCircle(curpos,radius,pos):
+    """
+    turtle circle does not draw from a center
+    so, get a center(x,y+r) and compute the euclidean distance
+            x,y+2r
+             __
+    x-r,y+r |__|  x+r,y+r
+            x,y
+
+    Parameters
+    ----------
+        arg1 current pos
+        arg2 circle radius
+        arg3 circle pos
+    Returns
+    -------
+        boolean
+    Examples
+    --------
+        pfun.isInCircle((100,200),100,(100,100))
+    """
+    center=(pos[0],pos[1]+radius)
+    distance=getEuclDistance(center,curpos)
+    return distance<=radius
+
+def drawCircleAt(radius,pos):
+    """
+    note: tilt circle if heading is not 0
+    Parameters
+    ----------
+        int or float
+        list or tuple (x,y)
+    Examples
+    --------
+        drawCircleAt(50,(100,50))
+    """
+    oldheading=t1.heading()
+    t1.setheading(0)
+    t1.penup()
+    t1.setpos(pos)
+    t1.pendown()
+    t1.circle(radius)
+    t1.setheading(oldheading)
+
+def getEuclDistance(p1,p2):
+    """
+    Parameters
+    ----------
+        list of x,y (current pos)
+        list of x,y (target pos)
+    Returns
+    -------
+        float distance
+    Examples
+    --------
+        getDistance((100,200),(50,100))
+        getDistance((-100,-200),(-50,-100))
+        111.80339887498948
+    """
+    import math
+    dtemp=0
+    for i in range(len(p1)):
+       dtemp+=math.pow(p1[i]-p2[i],2)
+    distance=math.sqrt(dtemp)
+    return distance
+
 def isInRectangle(point,coord):
+    """
+    determine if a point is inside a triangle
+    Parameters
+    ----------
+        arg1 tuple (or list) (x,y)
+        arg2 list of tuples [(x1,y1),(x2,y2)]
+    Returns
+    -------
+        boolean
+    Example
+    -------
+        point=(0, 0)
+        coord=[(100, 100), (200, 200)]
+        isInRectangle(point,coord)
+    """
     x1=coord[0][0]
     x2=coord[1][0]
     y1=coord[0][1]
@@ -349,16 +445,22 @@ def isInRectangle(point,coord):
     y=point[1]
     return (xs <= x <= xe and ys <= y <= ye)
 
-# determine if a point is inside any rectangles
-# input:
-# 1) point: tuple (or list) (x,y)
-# 2) coords: list of list of tuples [(x1,y1),(x2,y2)]
-# output: True or False
-# usage:
-# point=(0, 0)
-# coords=[ [(100, 100), (200, 200)],[(50, 50), (150, -50)]]
-# isInRectangles(point,coords)
 def isInRectangles(point,coords):
+    """
+    determine if a point is inside any rectangles
+    Parameters
+    ----------
+        arg1: tuple (or list) (x,y)
+        arg2: list of list of tuples [(x1,y1),(x2,y2)]
+    Returns
+    -------
+        boolean
+    Examples
+    --------
+        point=(0, 0)
+        coords=[ [(100, 100), (200, 200)],[(50, 50), (150, -50)]]
+        isInRectangles(point,coords)
+    """
     isIn=False
     for coord in coords:
         # return true if in any one of rectangle
